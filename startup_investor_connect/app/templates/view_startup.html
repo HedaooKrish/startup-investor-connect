@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>{{ startup.name }}</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>{{ startup.name }}</h1>
+        <img src="{{ url_for('static', filename='uploads/' + (startup.cover_image or 'placeholder.jpg')) }}" alt="{{ startup.name }}">
+        <p><strong>Description:</strong> {{ startup.description }}</p>
+        <p><strong>Industry:</strong> {{ startup.industry }}</p>
+        <p><strong>Funding Required:</strong> {{ startup.funding_required }}</p>
+        <p><strong>Website:</strong> <a href="{{ startup.website_url }}">{{ startup.website_url }}</a></p>
+        <h3>Send a Message</h3>
+        <form method="POST">
+            <textarea name="message" rows="4" placeholder="Write your message here..." required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</body>
+</html>

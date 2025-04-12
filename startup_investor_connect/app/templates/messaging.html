@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Messaging</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>Messaging</h1>
+        <div class="inbox">
+            <h2>Inbox</h2>
+            <ul class="message-list">
+                {% for message in inbox_messages %}
+                <li class="message-item">
+                    <strong>From:</strong> {{ message.sender }} <br>
+                    <strong>Subject:</strong> {{ message.subject }} <br>
+                    <a href="{{ url_for('view_message', message_id=message.id) }}">View Message</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="outbox">
+            <h2>Outbox</h2>
+            <ul class="message-list">
+                {% for message in outbox_messages %}
+                <li class="message-item">
+                    <strong>To:</strong> {{ message.recipient }} <br>
+                    <strong>Subject:</strong> {{ message.subject }} <br>
+                    <a href="{{ url_for('view_message', message_id=message.id) }}">View Message</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="send-message">
+            <h2>Send a Message</h2>
+            <form action="{{ url_for('send_message') }}" method="POST">
+                <div class="form-group">
+                    <label for="recipient">Recipient:</label>
+                    <input type="text" id="recipient" name="recipient" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="body">Message:</label>
+                    <textarea id="body" name="body" required></textarea>
+                </div>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

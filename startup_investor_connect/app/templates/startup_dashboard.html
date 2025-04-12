@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Startup Dashboard</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>Welcome to Your Startup Dashboard</h1>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('messages') }}" class="btn btn-primary">View Messages</a>
+        {% endif %}
+        <div class="filter-options">
+            <h3>Filter Investors</h3>
+            <form method="GET" action="{{ url_for('startup_dashboard') }}">
+                <label for="industry">Industry:</label>
+                <select name="industry" id="industry">
+                    <option value="">All Industries</option>
+                    <option value="Fintech">Fintech</option>
+                    <option value="Edtech">Edtech</option>
+                    <option value="Healthtech">Healthtech</option>
+                </select>
+                <label for="funding_range">Funding Range:</label>
+                <input type="text" name="funding_range" id="funding_range" placeholder="e.g. 10000-50000">
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+        <div class="investor-list">
+            <h3>Available Investors</h3>
+            <div class="row">
+                {% for investor in investors %}
+                <div class="col-md-4">
+                    <div class="investor-card">
+                        <a href="{{ url_for('view_investor', investor_id=investor.id) }}">
+                            <img src="{{ url_for('static', filename='uploads/' + (investor.cover_image or 'placeholder.jpg')) }}" alt="{{ investor.name }}">
+                        </a>
+                        <h4>{{ investor.name }}</h4>
+                        <p>{{ investor.industry }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

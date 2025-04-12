@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Messages</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>Your Messages</h1>
+        {% if messages %}
+        <ul>
+            {% for msg in messages %}
+            <li>
+                <strong>From:</strong> {{ msg.sender }} ({{ msg.startup_name }})<br>
+                <strong>To:</strong> {{ msg.receiver }}<br>
+                <strong>Message:</strong> {{ msg.message }}<br>
+                <strong>Timestamp:</strong> {{ msg.timestamp }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No messages found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

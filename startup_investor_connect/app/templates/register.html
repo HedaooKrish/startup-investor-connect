@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="user_type">I am a:</label>
+        <select id="user_type" name="user_type">
+            <option value="startup">Startup</option>
+            <option value="investor">Investor</option>
+        </select>
+        <div id="startup_fields" style="display: none;">
+            <label for="startup_name">Startup Name:</label>
+            <input type="text" id="startup_name" name="startup_name">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description"></textarea>
+            <label for="funding_received">Funding Received:</label>
+            <input type="number" id="funding_received" name="funding_received">
+            <label for="looking_for_investors">Looking for Investors:</label>
+            <input type="checkbox" id="looking_for_investors" name="looking_for_investors">
+            <label for="cover_image">Cover Image:</label>
+            <input type="file" id="cover_image" name="cover_image">
+            <label for="website_url">Website URL:</label>
+            <input type="url" id="website_url" name="website_url">
+            <label for="founder_details">Founder Details:</label>
+            <textarea id="founder_details" name="founder_details"></textarea>
+            <label for="industry">Industry:</label>
+            <select id="industry" name="industry">
+                <option value="Fintech">Fintech</option>
+                <option value="Edtech">Edtech</option>
+                <!-- Add more industries -->
+            </select>
+            <label for="funding_required">Funding Required:</label>
+            <input type="number" id="funding_required" name="funding_required">
+        </div>
+        <div id="investor_fields" style="display: none;">
+            <label for="investor_name">Name:</label>
+            <input type="text" id="investor_name" name="investor_name">
+            <label for="type">Type:</label>
+            <select id="type" name="type">
+                <option value="Individual">Individual</option>
+                <option value="Company">Company</option>
+            </select>
+            <label for="investment_portfolio">Investment Portfolio:</label>
+            <textarea id="investment_portfolio" name="investment_portfolio"></textarea>
+            <label for="total_funding_given">Total Funding Given:</label>
+            <input type="number" id="total_funding_given" name="total_funding_given">
+            <label for="industry">Industry:</label>
+            <select id="industry" name="industry">
+                <option value="Fintech">Fintech</option>
+                <option value="Edtech">Edtech</option>
+                <!-- Add more industries -->
+            </select>
+            <label for="funding_range_min">Funding Range (Min):</label>
+            <input type="number" id="funding_range_min" name="funding_range_min">
+            <label for="funding_range_max">Funding Range (Max):</label>
+            <input type="number" id="funding_range_max" name="funding_range_max">
+            <label for="cover_image">Cover Image:</label>
+            <input type="file" id="cover_image" name="cover_image">
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <script>
+        document.getElementById('user_type').addEventListener('change', function() {
+            const userType = this.value;
+            document.getElementById('startup_fields').style.display = userType === 'startup' ? 'block' : 'none';
+            document.getElementById('investor_fields').style.display = userType === 'investor' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

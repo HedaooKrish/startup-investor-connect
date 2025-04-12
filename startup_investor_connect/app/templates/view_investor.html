@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>{{ investor.name }}</title>
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>{{ investor.name }}</h1>
+        <img src="{{ url_for('static', filename='uploads/' + (investor.cover_image or 'placeholder.jpg')) }}" alt="{{ investor.name }}">
+        <p><strong>Type:</strong> {{ investor.type }}</p>
+        <p><strong>Industry:</strong> {{ investor.industry }}</p>
+        <p><strong>Total Funding Given:</strong> {{ investor.total_funding_given }}</p>
+        <h3>Send a Message</h3>
+        <form method="POST">
+            <textarea name="message" rows="4" placeholder="Write your message here..." required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</body>
+</html>
