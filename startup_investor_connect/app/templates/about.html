@@ -1,15 +1,210 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Startup Investor Connect</title>
-</head>
-<body>
-    {% include 'base.html' %}
-    <div class="container">
-        <h1>About Startup Investor Connect</h1>
-        <p>Startup Investor Connect is a platform designed to connect innovative startups with potential investors. Our mission is to foster collaboration and growth by bridging the gap between startups and investors.</p>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="about-page">
+    <div class="hero-section text-center py-5">
+        <h1 class="display-4 mb-4">About Startup Investor Connect</h1>
+        <p class="lead">Bridging the gap between innovative startups and visionary investors</p>
     </div>
-</body>
-</html>
+
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <div class="about-card p-4">
+                    <h2 class="mb-4">Our Mission</h2>
+                    <p>Startup Investor Connect is dedicated to creating meaningful connections between innovative startups and forward-thinking investors. We believe that great ideas deserve the right funding and support to flourish.</p>
+                    <p>Our platform provides a seamless experience for both startups and investors to discover, connect, and collaborate on groundbreaking ventures.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="about-card p-4">
+                    <h2 class="mb-4">Why Choose Us?</h2>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> Curated network of verified investors</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> Advanced matching algorithms</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> Secure messaging platform</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> Comprehensive startup profiles</li>
+                        <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i> Real-time notifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="about-card p-4">
+                    <h2 class="text-center mb-4">Our Impact</h2>
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-rocket fa-3x mb-3"></i>
+                                <h3>500+</h3>
+                                <p>Startups Connected</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-handshake fa-3x mb-3"></i>
+                                <h3>200+</h3>
+                                <p>Successful Matches</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-users fa-3x mb-3"></i>
+                                <h3>1000+</h3>
+                                <p>Active Investors</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <i class="fas fa-chart-line fa-3x mb-3"></i>
+                                <h3>$50M+</h3>
+                                <p>Funds Raised</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="about-card p-4">
+                    <h2 class="text-center mb-4">How It Works</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center p-3">
+                                <div class="step-number mb-3">1</div>
+                                <h4>Create Your Profile</h4>
+                                <p>Startups and investors create detailed profiles showcasing their expertise, interests, and requirements.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3">
+                                <div class="step-number mb-3">2</div>
+                                <h4>Find Matches</h4>
+                                <p>Our intelligent algorithm suggests the most relevant matches based on your profile and preferences.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3">
+                                <div class="step-number mb-3">3</div>
+                                <h4>Connect & Collaborate</h4>
+                                <p>Start meaningful conversations through our secure messaging platform and take your ideas forward.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="about-card p-4">
+                    <h2 class="text-center mb-4">Testimonials</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="testimonial-card p-4">
+                                <div class="testimonial-content">
+                                    <p class="mb-3">"Startup Investor Connect helped us find the perfect investor for our AI startup. The platform made the entire process seamless and efficient."</p>
+                                    <div class="testimonial-author">
+                                        <h5>Sarah Johnson</h5>
+                                        <p class="text-muted">CEO, TechVision AI</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="testimonial-card p-4">
+                                <div class="testimonial-content">
+                                    <p class="mb-3">"As an investor, I've found some of my best investment opportunities through this platform. The quality of startups is exceptional."</p>
+                                    <div class="testimonial-author">
+                                        <h5>Michael Chen</h5>
+                                        <p class="text-muted">Venture Capitalist</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="testimonial-card p-4">
+                                <div class="testimonial-content">
+                                    <p class="mb-3">"The matching algorithm is spot-on. We connected with investors who truly understood our vision and mission."</p>
+                                    <div class="testimonial-author">
+                                        <h5>David Rodriguez</h5>
+                                        <p class="text-muted">Founder, GreenTech Solutions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.about-page {
+    padding: 40px 0;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 60px 0;
+    margin-bottom: 40px;
+}
+
+.about-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: var(--secondary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.testimonial-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.testimonial-author {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.testimonial-author h5 {
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 0;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+</style>
+{% endblock %}

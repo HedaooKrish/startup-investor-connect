@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SelectField, RadioField, BooleanField, FileField, DecimalField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, URL, Optional
+from wtforms.validators import DataRequired, Length, URL, Optional, Email, EqualTo
 
 class StartupRegistrationForm(FlaskForm):
     startup_name = StringField('Startup Name', validators=[DataRequired(), Length(max=100)])
@@ -25,6 +25,16 @@ class InvestorRegistrationForm(FlaskForm):
     submit = SubmitField('Register Investor')
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Login')
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    user_type = SelectField('User Type', choices=[('startup', 'Startup'), ('investor', 'Investor')], validators=[DataRequired()])
+    accept_tos = BooleanField('I accept the Terms of Service and Privacy Policy', validators=[DataRequired()])
+    submit = SubmitField('Register')

@@ -1,49 +1,151 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <title>Investor Dashboard</title>
-</head>
-<body>
-    {% include 'base.html' %}
-    <div class="container">
-        <h1>Investor Dashboard</h1>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('messages') }}" class="btn btn-primary">View Messages</a>
-        {% endif %}
-        <div class="filter-options">
-            <h3>Filter Startups</h3>
-            <form method="GET" action="{{ url_for('investor_dashboard') }}">
-                <label for="industry">Industry:</label>
-                <select name="industry" id="industry">
-                    <option value="">All Industries</option>
-                    <option value="Fintech">Fintech</option>
-                    <option value="Edtech">Edtech</option>
-                    <option value="Healthtech">Healthtech</option>
-                </select>
-                <label for="funding_required">Funding Requirement:</label>
-                <input type="number" name="funding_required" id="funding_required" placeholder="Minimum Funding Required">
-                <button type="submit">Filter</button>
-            </form>
-        </div>
-        <div class="startup-list">
-            <h3>Available Startups</h3>
-            <div class="row">
-                {% for startup in startups %}
-                <div class="col-md-4">
-                    <div class="startup-card">
-                        <a href="{{ url_for('view_startup', startup_id=startup.id) }}">
-                            <img src="{{ url_for('static', filename='uploads/' + (startup.cover_image or 'placeholder.jpg')) }}" alt="{{ startup.name }}">
-                        </a>
-                        <h4>{{ startup.name }}</h4>
-                        <p>{{ startup.industry }}</p>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="profile-card">
+                    <div class="profile-image">
+                        {% if current_user.user_type == 'investor' and current_user.investor %}
+                            <img src="{{ url_for('static', filename='uploads/' + current_user.investor.cover_image) if current_user.investor.cover_image else url_for('static', filename='images/default-profile.png') }}" alt="Profile Image">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/default-profile.png') }}" alt="Profile Image">
+                        {% endif %}
+                    </div>
+                    <div class="profile-info text-center">
+                        <h4>{{ current_user.username }}</h4>
+                        <p class="text-muted">{{ current_user.user_type|title }}</p>
+                        {% if current_user.user_type == 'investor' and current_user.investor %}
+                            <div class="stats">
+                                <div class="stat-item">
+                                    <h5>${{ current_user.investor.total_funding_given }}</h5>
+                                    <p>Total Funding Given</p>
+                                </div>
+                                <div class="stat-item">
+                                    <h5>{{ current_user.investor.investment_portfolio|length }}</h5>
+                                    <p>Investments Made</p>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
+            </div>
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="dashboard-header">
+                    <h2>Startup Opportunities</h2>
+                </div>
+                <div class="startup-list row">
+                    {% for startup in startups %}
+                    <div class="col-md-4 mb-4">
+                        <div class="startup-card">
+                            <div class="startup-image">
+                                <img src="{{ url_for('static', filename='uploads/' + startup.cover_image) if startup.cover_image else url_for('static', filename='images/default-startup.png') }}" alt="{{ startup.name }}">
+                            </div>
+                            <div class="startup-info text-center">
+                                <h4>{{ startup.name }}</h4>
+                                <p><strong>Funding Required:</strong> ${{ startup.funding_required }}</p>
+                                <p><strong>Funding Received:</strong> ${{ startup.funding_received }}</p>
+                                <p><strong>Industry:</strong> {{ startup.industry }}</p>
+                                <div class="startup-actions">
+                                    <a href="{{ url_for('view_startup', startup_id=startup.id) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-2"></i>View Profile
+                                    </a>
+                                    <a href="{{ url_for('messages') }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-envelope me-2"></i>Message
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+.dashboard-page {
+    padding: 20px 0;
+    background-color: #f8f9fa;
+}
+
+.profile-image img {
+    width: 140px; /* Increased size */
+    height: 140px; /* Increased size */
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: block;
+}
+
+.profile-info h4 {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.startup-list {
+    margin-top: 20px;
+}
+
+.startup-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    padding: 15px;
+    text-align: center;
+}
+
+.startup-card:hover {
+    transform: translateY(-5px);
+}
+
+.startup-image img {
+    width: 100%;
+    height: 180px; /* Increased height */
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.startup-info h4 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.startup-info p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.startup-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.startup-actions .btn {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+}
+
+@media (max-width: 768px) {
+    .startup-card {
+        margin-bottom: 20px;
+    }
+
+    .startup-image img {
+        height: 140px; /* Adjusted for smaller screens */
+    }
+}
+</style>
+{% endblock %}

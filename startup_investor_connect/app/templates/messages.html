@@ -1,29 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <title>Messages</title>
-</head>
-<body>
-    {% include 'base.html' %}
-    <div class="container">
-        <h1>Your Messages</h1>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Messages</h2>
+    <div class="messages-list">
         {% if messages %}
-        <ul>
-            {% for msg in messages %}
-            <li>
-                <strong>From:</strong> {{ msg.sender }} ({{ msg.startup_name }})<br>
-                <strong>To:</strong> {{ msg.receiver }}<br>
-                <strong>Message:</strong> {{ msg.message }}<br>
-                <strong>Timestamp:</strong> {{ msg.timestamp }}
-            </li>
-            {% endfor %}
-        </ul>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Message</th>
+                        <th>From/To</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages %}
+                    <tr>
+                        <td>{{ message.type }}</td>
+                        <td>{{ message.message }}</td>
+                        <td>{{ message.from if message.type == "Received" else message.to }}</td>
+                        <td>{{ message.timestamp }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-        <p>No messages found.</p>
+            <p class="text-center">You have no messages.</p>
         {% endif %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

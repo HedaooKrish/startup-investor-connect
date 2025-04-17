@@ -5,21 +5,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>{{ startup.name }}</title>
+    <style>
+        .view-profile-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .view-profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .view-profile-header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .view-profile-header img {
+            max-width: 250px;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .view-profile-details {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .view-profile-details p {
+            margin-bottom: 10px;
+        }
+
+        .view-profile-details a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .view-profile-details a:hover {
+            text-decoration: underline;
+        }
+
+        .view-profile-message {
+            margin-top: 30px;
+        }
+
+        .view-profile-message textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            margin-bottom: 10px;
+        }
+
+        .view-profile-message button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .view-profile-message button:hover {
+            background: var(--primary-color-dark);
+        }
+
+        .footer {
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        .footer h5 {
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .footer ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer ul li a {
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .footer ul li a:hover {
+            color: #fff;
+        }
+
+        .footer .text-center {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     {% include 'base.html' %}
-    <div class="container">
-        <h1>{{ startup.name }}</h1>
-        <img src="{{ url_for('static', filename='uploads/' + (startup.cover_image or 'placeholder.jpg')) }}" alt="{{ startup.name }}">
-        <p><strong>Description:</strong> {{ startup.description }}</p>
-        <p><strong>Industry:</strong> {{ startup.industry }}</p>
-        <p><strong>Funding Required:</strong> {{ startup.funding_required }}</p>
-        <p><strong>Website:</strong> <a href="{{ startup.website_url }}">{{ startup.website_url }}</a></p>
-        <h3>Send a Message</h3>
-        <form method="POST">
-            <textarea name="message" rows="4" placeholder="Write your message here..." required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
+    <div class="view-profile-container">
+        <div class="view-profile-header">
+            <h1>{{ startup.name }}</h1>
+            <img src="{{ url_for('static', filename='uploads/' + startup.cover_image) if startup.cover_image else url_for('static', filename='images/placeholder.png') }}" alt="{{ startup.name }}">
+        </div>
+        <div class="view-profile-details">
+            <p><strong>Description:</strong> {{ startup.description }}</p>
+            <p><strong>Industry:</strong> {{ startup.industry }}</p>
+            <p><strong>Funding Required:</strong> ${{ startup.funding_required }}</p>
+            <p><strong>Website:</strong> <a href="{{ startup.website_url }}" target="_blank">{{ startup.website_url }}</a></p>
+        </div>
+        <div class="view-profile-message">
+            <h3>Send a Message</h3>
+            <form method="POST">
+                <textarea name="message" rows="4" placeholder="Write your message here..." required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
     </div>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Startup Investor Connect</h5>
+                    <p>Bridging the gap between innovative startups and visionary investors.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Register</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>&copy; 2024 Startup Investor Connect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

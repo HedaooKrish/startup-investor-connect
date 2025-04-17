@@ -5,20 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>{{ investor.name }}</title>
+    <style>
+        .view-profile-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .view-profile-container h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .view-profile-container img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+        }
+        .view-profile-container p {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .view-profile-container a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .view-profile-container a:hover {
+            text-decoration: underline;
+        }
+        .view-profile-message h3 {
+            margin-top: 20px;
+            color: var(--primary-color);
+        }
+        .view-profile-message form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            margin-bottom: 10px;
+        }
+        .view-profile-message form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-profile-message form button:hover {
+            background-color: var(--primary-color-hover);
+        }
+    </style>
 </head>
 <body>
-    {% include 'base.html' %}
-    <div class="container">
-        <h1>{{ investor.name }}</h1>
-        <img src="{{ url_for('static', filename='uploads/' + (investor.cover_image or 'placeholder.jpg')) }}" alt="{{ investor.name }}">
-        <p><strong>Type:</strong> {{ investor.type }}</p>
-        <p><strong>Industry:</strong> {{ investor.industry }}</p>
-        <p><strong>Total Funding Given:</strong> {{ investor.total_funding_given }}</p>
-        <h3>Send a Message</h3>
-        <form method="POST">
-            <textarea name="message" rows="4" placeholder="Write your message here..." required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
+    {% extends "base.html" %}
+
+    {% block content %}
+    <div class="view-profile-container">
+        <div class="view-profile-header text-center">
+            <h1>{{ investor.name }}</h1>
+            <img src="{{ url_for('static', filename='uploads/' + investor.cover_image) if investor.cover_image else url_for('static', filename='images/default-profile.png') }}" 
+                 alt="{{ investor.name }}" style="max-width: 250px; max-height: 250px; object-fit: cover; border-radius: 10px; margin: 20px auto; display: block;">
+        </div>
+        <div class="view-profile-details">
+            <p><strong>Type:</strong> {{ investor.type }}</p>
+            <p><strong>Industry:</strong> {{ investor.industry }}</p>
+            <p><strong>Investment Range:</strong> ${{ investor.funding_range_min }} - ${{ investor.funding_range_max }}</p>
+            <p><strong>Total Funding Given:</strong> ${{ investor.total_funding_given }}</p>
+        </div>
+        <div class="view-profile-message">
+            <h3>Send a Message</h3>
+            <form method="POST">
+                <textarea name="message" rows="4" placeholder="Write your message here..." required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: none; margin-bottom: 10px;"></textarea>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-size: 1rem;">Send Message</button>
+            </form>
+        </div>
     </div>
+    <footer class="footer">
+        <!-- ...existing footer code... -->
+    </footer>
+    {% endblock %}
 </body>
 </html>

@@ -1,11 +1,12 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from flask_login import LoginManager, current_user, login_user
+from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from startup_investor_connect.config import Config
+from .forms import LoginForm, RegistrationForm
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -18,6 +19,7 @@ def allowed_file(filename):
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config['UPLOAD_FOLDER'] = 'static/uploads'
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
@@ -90,6 +92,7 @@ def create_app():
                 db.session.add(investor)
 
             db.session.commit()
+            flash('Your account has been created! You can now log in.', 'success')
             return redirect(url_for('login'))
         return render_template('register.html')
 
@@ -99,21 +102,29 @@ def create_app():
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
+            remember = 'remember' in request.form
 
             # Query the user from the database
             user = User.query.filter_by(username=username).first()
 
             if user and check_password_hash(user.password, password):
-                login_user(user)  # Log the user in
+                login_user(user, remember=remember)  # Log the user in
+                next_page = request.args.get('next')
                 # Redirect based on user type
                 if user.user_type == 'startup':
-                    return redirect(url_for('startup_dashboard'))
+                    return redirect(next_page) if next_page else redirect(url_for('startup_dashboard'))
                 elif user.user_type == 'investor':
-                    return redirect(url_for('investor_dashboard'))
+                    return redirect(next_page) if next_page else redirect(url_for('investor_dashboard'))
             else:
-                return render_template('login.html', error="Invalid username or password")
+                flash('Invalid username or password.', 'danger')
+                return render_template('login.html')
 
         return render_template('login.html')
+
+    @app.route('/logout')
+    def logout():
+        logout_user()
+        return redirect(url_for('index'))
 
     @app.route('/startup_dashboard', methods=['GET'])
     def startup_dashboard():
@@ -165,12 +176,11 @@ def create_app():
         startup = Startup.query.get_or_404(startup_id)
 
         if request.method == 'POST':
-            sender_id = session.get('user_id')  # Get sender_id from session
-            if not sender_id:
+            if not current_user.is_authenticated:  # Check if the user is logged in
                 return "User not logged in", 403  # Handle unauthenticated users
 
             message_content = request.form['message']
-            message = Message(sender_id=sender_id, receiver_id=startup.user_id, message=message_content)
+            message = Message(sender_id=current_user.id, receiver_id=startup.user_id, message=message_content)
             db.session.add(message)
             db.session.commit()
             return redirect(url_for('view_startup', startup_id=startup_id))
@@ -183,41 +193,44 @@ def create_app():
         investor = Investor.query.get_or_404(investor_id)
 
         if request.method == 'POST':
-            sender_id = session.get('user_id')  # Get sender_id from session
-            if not sender_id:
+            if not current_user.is_authenticated:  # Check if the user is logged in
                 return "User not logged in", 403  # Handle unauthenticated users
 
             message_content = request.form['message']
-            message = Message(sender_id=sender_id, receiver_id=investor.user_id, message=message_content)
+            message = Message(sender_id=current_user.id, receiver_id=investor.user_id, message=message_content)
             db.session.add(message)
             db.session.commit()
+            flash('Message sent successfully!', 'success')
             return redirect(url_for('view_investor', investor_id=investor_id))
 
         return render_template('view_investor.html', investor=investor)
 
     @app.route('/messages', methods=['GET'])
+    @login_required
     def messages():
-        from .models import Message, User, Startup
-        user_id = session.get('user_id')  # Get the logged-in user's ID
-        if not user_id:
-            return "User not logged in", 403  # Handle unauthenticated users
+        from .models import Message, User
 
         # Query messages where the logged-in user is the sender or receiver
-        received_messages = Message.query.filter_by(receiver_id=user_id).all()
-        sent_messages = Message.query.filter_by(sender_id=user_id).all()
+        received_messages = Message.query.filter_by(receiver_id=current_user.id).all()
+        sent_messages = Message.query.filter_by(sender_id=current_user.id).all()
 
-        # Include sender details (startup name if available)
+        # Include sender and receiver details
         messages_with_details = []
-        for msg in received_messages + sent_messages:
-            sender_user = User.query.get(msg.sender_id)
-            sender_startup = Startup.query.filter_by(user_id=msg.sender_id).first()
-            sender_name = sender_startup.name if sender_startup else sender_user.username
-
+        for msg in received_messages:
+            sender = User.query.get(msg.sender_id)
             messages_with_details.append({
+                "type": "Received",
                 "message": msg.message,
                 "timestamp": msg.timestamp,
-                "sender": sender_name,
-                "receiver": User.query.get(msg.receiver_id).username
+                "from": sender.username if sender else "Unknown",
+            })
+        for msg in sent_messages:
+            receiver = User.query.get(msg.receiver_id)
+            messages_with_details.append({
+                "type": "Sent",
+                "message": msg.message,
+                "timestamp": msg.timestamp,
+                "to": receiver.username if receiver else "Unknown",
             })
 
         return render_template('messages.html', messages=messages_with_details)
@@ -225,6 +238,29 @@ def create_app():
     @app.route('/about')
     def about():
         return render_template('about.html')
+
+    @app.route('/update_image', methods=['POST'])
+    def update_image():
+        if 'image' not in request.files:
+            flash('No file part')
+            return redirect(request.referrer)
+        file = request.files['image']
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.referrer)
+        
+        if file:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            
+            # Update the user's profile image in the database
+            current_user.cover_image = filename
+            db.session.commit()
+            
+            flash('Profile image updated successfully!')
+            return redirect(url_for('investor_dashboard'))
 
     return app
 
